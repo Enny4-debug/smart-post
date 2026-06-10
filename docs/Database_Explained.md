@@ -313,5 +313,46 @@ USER ──────────────────► STUDENT
 
 ---
 
+## Section 10 — Seeding Default Users
+
+To quickly initialise the database with the three default accounts (Admin, Staff, Student) you can run the **seed script** located at `backend/scripts/seed.py`.
+
+### Prerequisites
+1. **Navigate to the project root** – this is the folder that contains the `backend` directory.
+2. **Activate the Python virtual environment** (if it isn’t already active):
+   ```bash
+   source backend/venv/bin/activate   # Linux/macOS
+   # or
+   .\backend\venv\Scripts\activate   # Windows PowerShell
+   ```
+
+### Run the script
+From the **project root** execute:
+```bash
+PYTHONPATH=backend backend/venv/bin/python backend/scripts/seed.py
+```
+Or, if you prefer changing into the `backend` directory first:
+```bash
+cd backend
+source venv/bin/activate
+PYTHONPATH=. python scripts/seed.py
+```
+Both commands achieve the same result – they add three users to the database:
+- **System Admin** – `admin@iaacollege.ac.tz` / `admin123`
+- **Department Head (Staff)** – `hod.cs@iaacollege.ac.tz` / `staff123`
+- **Student** – `student@iaacollege.ac.tz` / `student123`
+
+> **Tip:** After running the script you should see a console output similar to:
+> `Successfully seeded Admin, Staff, and Student users!`
+
+If you encounter any errors, ensure that:
+- The database service is running (FastAPI should be up on `localhost:8000`).
+- The virtual environment has the required packages (`pip install -r requirements.txt`).
+- The `PYTHONPATH` points to the directory containing the `app` package.
+
+You can now log in with any of the accounts on the SmartPost UI.
+
+---
+
 *Document prepared by: SmartPost Development Team*
 *Last updated: June 2026*
