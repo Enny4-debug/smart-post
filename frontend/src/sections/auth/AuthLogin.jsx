@@ -22,6 +22,7 @@ import { Formik } from 'formik';
 // project imports
 import IconButton from 'components/@extended/IconButton';
 import AnimateButton from 'components/@extended/AnimateButton';
+import apiClient from 'api/client';
 
 // assets
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
@@ -45,20 +46,51 @@ export default function AuthLogin({ isDemo = false }) {
     <>
       <Formik
         initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
+          email: 'student@iaacollege.ac.tz',
+          password: 'student123',
           submit: null
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string()
             .required('Password is required')
-            .test('no-leading-trailing-whitespace', 'Password cannot start or end with spaces', (value) => value === value.trim())
-            .max(10, 'Password must be less than 10 characters')
+            .max(255)
         })}
+        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+          try {
+            const formData = new URLSearchParams();
+            formData.append('username', values.email);
+            formData.append('password', values.password);
+
+            const response = await apiClient.post('/auth/login', formData, {
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            });
+
+            const { access_token, role, name } = response.data;
+            
+            // Save to local storage
+            localStorage.setItem('token', access_token);
+            localStorage.setItem('userRole', role);
+            localStorage.setItem('userName', name);
+
+            setStatus({ success: true });
+            setSubmitting(false);
+
+            // Redirect based on role
+            if (role === 'STUDENT') {
+              window.location.href = '/student/dashboard';
+            } else {
+              window.location.href = '/staff/dashboard';
+            }
+          } catch (err) {
+            setStatus({ success: false });
+            setErrors({ submit: err.response?.data?.detail || err.message });
+            setSubmitting(false);
+          }
+        }}
       >
-        {({ errors, handleBlur, handleChange, touched, values }) => (
-          <form noValidate>
+        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+          <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid size={12}>
                 <Stack sx={{ gap: 1 }}>
@@ -134,9 +166,14 @@ export default function AuthLogin({ isDemo = false }) {
                   </Link>
                 </Stack>
               </Grid>
+              {errors.submit && (
+                <Grid size={12}>
+                  <FormHelperText error>{errors.submit}</FormHelperText>
+                </Grid>
+              )}
               <Grid size={12}>
                 <AnimateButton>
-                  <Button fullWidth size="large" variant="contained" color="primary">
+                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
                     Login
                   </Button>
                 </AnimateButton>
