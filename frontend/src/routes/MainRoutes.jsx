@@ -7,6 +7,7 @@ import DashboardLayout from 'layout/Dashboard';
 const StudentDashboard = Loadable(lazy(() => import('pages/student/Dashboard')));
 const NewRequest       = Loadable(lazy(() => import('pages/student/NewRequest')));
 const MyRequests       = Loadable(lazy(() => import('pages/student/MyRequests')));
+const Profile          = Loadable(lazy(() => import('pages/profile/index')));
 const StaffDashboard   = Loadable(lazy(() => import('pages/staff/Dashboard')));
 const AdminDashboard   = Loadable(lazy(() => import('pages/admin/Dashboard')));
 const AdminUsers       = Loadable(lazy(() => import('pages/admin/Users')));
@@ -24,6 +25,10 @@ const MainRoutes = {
       path: '/',
       element: <StudentDashboard /> // Default for unauthenticated / student
     },
+    {
+      path: 'profile',
+      element: <Profile />
+    },
     // Student Routes
     {
       path: 'student',
@@ -31,7 +36,7 @@ const MainRoutes = {
         { path: 'dashboard',   element: <StudentDashboard /> },
         { path: 'new-request', element: <NewRequest /> },
         { path: 'my-requests', element: <MyRequests /> },
-        { path: 'profile',     element: <Placeholder /> }
+        { path: 'profile',     element: <Profile /> }
       ]
     },
     // Staff Routes (HoD, Campus Manager)

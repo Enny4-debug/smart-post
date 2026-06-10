@@ -17,7 +17,34 @@ async def get_me(current_user: Annotated[User, Depends(get_current_user)]):
         "email": current_user.email,
         "role": current_user.role,
         "department": current_user.department,
+        "profile_picture": current_user.profile_picture,
         "is_active": current_user.is_active,
+    }
+
+
+from pydantic import BaseModel, EmailStr
+from uuid import UUID
+
+class UserUpdateMe(BaseModel):
+    name: str | None = None
+    profile_picture: str | None = None
+
+@router.patch("/me", summary="Update current user profile")
+async def update_me(
+    user_in: UserUpdateMe,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: AsyncSession = Depends(get_db)
+):
+    if user_in.name is not None:
+        current_user.name = user_in.name
+    if user_in.profile_picture is not None:
+        current_user.profile_picture = user_in.profile_picture
+    
+    await db.commit()
+    return {
+        "message": "Profile updated successfully",
+        "name": current_user.name,
+        "profile_picture": current_user.profile_picture
     }
 
 

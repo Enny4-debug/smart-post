@@ -65,6 +65,7 @@ export default function Profile() {
   const userName = localStorage.getItem('userName') || 'User';
   const userRole = localStorage.getItem('userRole') || '';
   const roleLabel = ROLE_LABELS[userRole.toLowerCase()] || userRole;
+  const userAvatar = localStorage.getItem('userAvatar') || avatar1;
 
   const logout = useLogout();
 
@@ -105,7 +106,7 @@ export default function Profile() {
         onClick={handleToggle}
       >
         <Stack direction="row" sx={{ gap: 1.25, alignItems: 'center', p: 0.5 }}>
-          <Avatar alt="profile user" src={avatar1} size="sm" />
+          <Avatar alt="profile user" src={userAvatar} size="sm" />
           <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
             {userName}
           </Typography>
@@ -138,7 +139,7 @@ export default function Profile() {
                     <Grid container justifyContent="space-between" alignItems="center">
                       <Grid>
                         <Stack direction="row" sx={{ gap: 1.25, alignItems: 'center' }}>
-                          <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
+                          <Avatar alt="profile user" src={userAvatar} sx={{ width: 32, height: 32 }} />
                           <Stack>
                             <Typography variant="h6">{userName}</Typography>
                             <Typography variant="body2" color="text.secondary">

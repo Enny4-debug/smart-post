@@ -46,6 +46,7 @@ async def login(
         "token_type": "bearer",
         "role": user.role,
         "name": user.name,
+        "profile_picture": user.profile_picture,
     }
 
 

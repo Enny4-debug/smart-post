@@ -66,12 +66,17 @@ export default function AuthLogin({ isDemo = false }) {
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
 
-            const { access_token, role, name } = response.data;
+            const { access_token, role, name, profile_picture } = response.data;
             
             // Save to local storage
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('userRole', role);
             localStorage.setItem('userName', name);
+            if (profile_picture) {
+              localStorage.setItem('userAvatar', profile_picture);
+            } else {
+              localStorage.removeItem('userAvatar');
+            }
 
             setStatus({ success: true });
             setSubmitting(false);
