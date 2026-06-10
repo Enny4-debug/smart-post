@@ -4,8 +4,9 @@ import { lazy } from 'react';
 import Loadable from 'components/Loadable';
 import DashboardLayout from 'layout/Dashboard';
 
-// render - Dashboards
 const StudentDashboard = Loadable(lazy(() => import('pages/student/Dashboard')));
+const NewRequest       = Loadable(lazy(() => import('pages/student/NewRequest')));
+const MyRequests       = Loadable(lazy(() => import('pages/student/MyRequests')));
 const StaffDashboard   = Loadable(lazy(() => import('pages/staff/Dashboard')));
 const AdminDashboard   = Loadable(lazy(() => import('pages/admin/Dashboard')));
 const AdminUsers       = Loadable(lazy(() => import('pages/admin/Users')));
@@ -28,8 +29,8 @@ const MainRoutes = {
       path: 'student',
       children: [
         { path: 'dashboard',   element: <StudentDashboard /> },
-        { path: 'new-request', element: <Placeholder /> },
-        { path: 'my-requests', element: <Placeholder /> },
+        { path: 'new-request', element: <NewRequest /> },
+        { path: 'my-requests', element: <MyRequests /> },
         { path: 'profile',     element: <Placeholder /> }
       ]
     },

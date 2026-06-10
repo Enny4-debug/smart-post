@@ -1,0 +1,75 @@
+PROJECT PROPOSAL
+Title: SmartPost: A Digital Academic Postponement Management System for IAA
+College
+
+1.1 Problem Statement
+At IAA College, students currently rely on paper-based forms to reqsuest
+postponement of
+academic years or semesters. This manual process is prone to inefficiencies such as
+misplaced
+forms, delays in approvals, lack of transparency, and difficulty in tracking records.
+Students often
+face challenges in attaching evidence, following up on approvals, and ensuring
+compliance with
+regulations. Administrators also struggle with managing large volumes of paper
+records, verifying
+authenticity, and producing timely reports. There is therefore a need for a digital
+system that
+automates, secures, and streamlines the postponement request process.
+
+1.2 Main Objective
+To develop SmartPost System: A Digital Academic Postponement Management
+System for IAA Collage
+
+1.3 Specific Objectives and Processes
+i.
+
+To develop user (students, staff and admin) management subsystem.
+
+ii.
+
+To develop postponement and approval subsystem.
+
+iii.
+
+To develop verification subsystem for student details and payment status.
+
+iv.
+
+To develop document Management Subsystem.
+
+v.
+
+To develop Reporting and Analytics Subsystem.
+
+1.4 Significance of the Project
+A. For Students: Simplifies the postponement process, reduces delays, and
+ensures
+transparency.
+
+B. For Academic Staff: Streamlines approvals, reduces paperwork, and improves
+efficiency.
+C. For IAA College: Demonstrates innovation in academic administration,
+aligning with
+digital transformation goal.
+D. For Academia: Serves as a case study in digitizing administrative workflows.
+E. For Society: Encourages trust in digital systems and prepares students for egovernance
+practices.
+
+1.5 Scope of the Project
+1. Connectivity Dependency – the system requires stable internet/network
+access no offline mode is available
+2. Integration Constraints – Real-time sync with IAA’s existing student
+database may not be fully archivable if it lacks a proper API.
+3. User adoption – some staff and student may resist the shift from paper-based
+processes, requiring training.
+4. Document Authenticity – the system cannot verify if uploaded evidence (eg.,
+medical reports) is genuine; human review is still needed.
+5. Single campus Scope – SmartPost is designed for IAA College only, limiting
+broader applicability.
+6. Policy Dependency – Changes in IAA’s academic regulations require manual
+system updates, the system cannot auto-adapt
+7. Data Security Reliance – Overall security depends on the hosting
+environment, which is outside the system’s direct control.
+
+
