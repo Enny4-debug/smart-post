@@ -43,11 +43,86 @@ async def list_users(
     ]
 
 
+from pydantic import BaseModel, EmailStr
+from uuid import UUID
+
+class UserCreate(BaseModel):
+    name: str
+    email: EmailStr
+    role: str
+    department: str | None = None
+    password: str
+
+class UserUpdate(BaseModel):
+    name: str | None = None
+    role: str | None = None
+    department: str | None = None
+
 @router.post("/", summary="Create a new user [Admin only]")
-async def create_user(admin: Annotated[User, Depends(require_admin)]):
-    return {"message": "Create user — coming soon"}
+async def create_user(
+    user_in: UserCreate,
+    admin: Annotated[User, Depends(require_admin)],
+    db: AsyncSession = Depends(get_db),
+):
+    from app.routers.auth import pwd_context
+    from fastapi import HTTPException
+    
+    result = await db.execute(select(User).where(User.email == user_in.email))
+    if result.scalar_one_or_none():
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    new_user = User(
+        name=user_in.name,
+        email=user_in.email,
+        role=user_in.role,
+        department=user_in.department,
+        password_hash=pwd_context.hash(user_in.password),
+        is_active=True
+    )
+    db.add(new_user)
+    await db.commit()
+    return {"message": "User created successfully", "user_id": str(new_user.user_id)}
 
 
-@router.patch("/{user_id}/deactivate", summary="Deactivate a user [Admin only]")
-async def deactivate_user(user_id: str, admin: Annotated[User, Depends(require_admin)]):
-    return {"message": f"Deactivate user {user_id} — coming soon"}
+@router.patch("/{user_id}", summary="Edit a user [Admin only]")
+async def edit_user(
+    user_id: UUID,
+    user_in: UserUpdate,
+    admin: Annotated[User, Depends(require_admin)],
+    db: AsyncSession = Depends(get_db),
+):
+    from fastapi import HTTPException
+    result = await db.execute(select(User).where(User.user_id == user_id))
+    user = result.scalar_one_or_none()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    if user_in.name is not None:
+        user.name = user_in.name
+    if user_in.role is not None:
+        user.role = user_in.role
+    if user_in.department is not None:
+        user.department = user_in.department
+        
+    await db.commit()
+    return {"message": "User updated successfully"}
+
+
+@router.patch("/{user_id}/toggle-status", summary="Toggle user active status [Admin only]")
+async def toggle_user_status(
+    user_id: UUID, 
+    admin: Annotated[User, Depends(require_admin)],
+    db: AsyncSession = Depends(get_db),
+):
+    from fastapi import HTTPException
+    result = await db.execute(select(User).where(User.user_id == user_id))
+    user = result.scalar_one_or_none()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user.user_id == admin.user_id:
+        raise HTTPException(status_code=400, detail="Cannot deactivate yourself")
+
+    user.is_active = not user.is_active
+    await db.commit()
+    return {"message": f"User status changed to {'active' if user.is_active else 'inactive'}", "is_active": user.is_active}
