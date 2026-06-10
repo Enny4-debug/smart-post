@@ -23,6 +23,7 @@ import Avatar from 'components/@extended/Avatar';
 import MainCard from 'components/MainCard';
 import Transitions from 'components/@extended/Transitions';
 import IconButton from 'components/@extended/IconButton';
+import useLogout from 'hooks/useLogout';
 
 // assets
 import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
@@ -48,8 +49,24 @@ function a11yProps(index) {
 
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
+// Role enum → human-readable label map
+const ROLE_LABELS = {
+  student: 'Student',
+  administrator: 'Administrator',
+  hod_academic: 'HoD Academic',
+  hod_examinations: 'HoD Examinations',
+  campus_manager: 'Campus Manager'
+};
+
 export default function Profile() {
   const theme = useTheme();
+
+  // Read real user data from localStorage (set at login)
+  const userName = localStorage.getItem('userName') || 'User';
+  const userRole = localStorage.getItem('userRole') || '';
+  const roleLabel = ROLE_LABELS[userRole.toLowerCase()] || userRole;
+
+  const logout = useLogout();
 
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -90,7 +107,7 @@ export default function Profile() {
         <Stack direction="row" sx={{ gap: 1.25, alignItems: 'center', p: 0.5 }}>
           <Avatar alt="profile user" src={avatar1} size="sm" />
           <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-            Jane Doe
+            {userName}
           </Typography>
         </Stack>
       </ButtonBase>
@@ -123,16 +140,16 @@ export default function Profile() {
                         <Stack direction="row" sx={{ gap: 1.25, alignItems: 'center' }}>
                           <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
                           <Stack>
-                            <Typography variant="h6">Jane Doe</Typography>
+                            <Typography variant="h6">{userName}</Typography>
                             <Typography variant="body2" color="text.secondary">
-                              Student
+                              {roleLabel}
                             </Typography>
                           </Stack>
                         </Stack>
                       </Grid>
                       <Grid>
                         <Tooltip title="Logout">
-                          <IconButton size="large" sx={{ color: 'text.primary' }}>
+                          <IconButton size="large" sx={{ color: 'text.primary' }} onClick={logout}>
                             <LogoutOutlined />
                           </IconButton>
                         </Tooltip>

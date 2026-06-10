@@ -11,7 +11,7 @@ const apiClient = axios.create({
 // Request interceptor to attach JWT token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token'); // matches key set at login
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -26,9 +26,10 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       // Clear token and redirect to login if unauthorized
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login'; // Use standard navigation to force reload
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userName');
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

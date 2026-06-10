@@ -9,9 +9,9 @@ import MainCard from 'components/MainCard';
 import { useState, useEffect } from 'react';
 import client from 'api/client';
 
-// ==============================|| STAFF DASHBOARD ||============================== //
+// ==============================|| ADMIN DASHBOARD ||============================== //
 
-export default function StaffDashboard() {
+export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,11 +30,11 @@ export default function StaffDashboard() {
 
   return (
     <Grid container rowSpacing={4.5} columnSpacing={2.75}>
-      {/* row 1 */}
+      {/* Header */}
       <Grid size={12} sx={{ mb: -2.25 }}>
-        <Typography variant="h5">Department Overview</Typography>
+        <Typography variant="h5">System Overview</Typography>
         <Typography variant="body2" color="textSecondary">
-          Computer Science Department — Academic Year 2025/2026
+          Administrator Dashboard — IAA College
         </Typography>
       </Grid>
 
@@ -74,10 +74,15 @@ export default function StaffDashboard() {
         </>
       )}
 
-      {/* row 2 */}
+      {/* Admin-only panel */}
       <Grid size={{ xs: 12, md: 7, lg: 8 }}>
-        <MainCard title="Pending Your Approval" content={false}>
-          <Typography sx={{ p: 2 }}>Table coming soon...</Typography>
+        <MainCard title="User Management" content={false}>
+          <Typography sx={{ p: 2 }}>User management table coming soon...</Typography>
+        </MainCard>
+      </Grid>
+      <Grid size={{ xs: 12, md: 5, lg: 4 }}>
+        <MainCard title="System Rules" content={false}>
+          <Typography sx={{ p: 2 }}>System configuration coming soon...</Typography>
         </MainCard>
       </Grid>
     </Grid>

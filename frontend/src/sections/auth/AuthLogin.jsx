@@ -69,17 +69,20 @@ export default function AuthLogin({ isDemo = false }) {
             const { access_token, role, name } = response.data;
             
             // Save to local storage
-            localStorage.setItem('token', access_token);
+            localStorage.setItem('access_token', access_token);
             localStorage.setItem('userRole', role);
             localStorage.setItem('userName', name);
 
             setStatus({ success: true });
             setSubmitting(false);
 
-            // Redirect based on role
-            if (role === 'STUDENT') {
+            // Redirect based on role (backend returns lowercase)
+            if (role === 'student') {
               window.location.href = '/student/dashboard';
+            } else if (role === 'administrator') {
+              window.location.href = '/admin/dashboard';
             } else {
+              // hod_academic, hod_examinations, campus_manager
               window.location.href = '/staff/dashboard';
             }
           } catch (err) {

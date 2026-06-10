@@ -17,7 +17,7 @@ async def seed_users():
             email="admin@iaacollege.ac.tz",
             password_hash=pwd_context.hash("admin123"),
             name="System Admin",
-            role="ADMIN",
+            role="administrator",
             is_active=True
         )
         
@@ -26,7 +26,7 @@ async def seed_users():
             email="hod.cs@iaacollege.ac.tz",
             password_hash=pwd_context.hash("staff123"),
             name="Dr. Smith",
-            role="STAFF",
+            role="hod_academic",
             is_active=True
         )
 
@@ -35,7 +35,7 @@ async def seed_users():
             email="student@iaacollege.ac.tz",
             password_hash=pwd_context.hash("student123"),
             name="Jane Doe",
-            role="STUDENT",
+            role="student",
             is_active=True
         )
 
