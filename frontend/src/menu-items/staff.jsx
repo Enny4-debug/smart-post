@@ -53,14 +53,6 @@ const staff = {
       breadcrumbs: false
     },
     {
-      id: 'staff-users',
-      title: 'Manage Users',
-      type: 'item',
-      url: '/staff/users',
-      icon: icons.TeamOutlined,
-      breadcrumbs: false
-    },
-    {
       id: 'staff-settings',
       title: 'System Rules',
       type: 'item',

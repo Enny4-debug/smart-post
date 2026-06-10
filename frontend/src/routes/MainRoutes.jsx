@@ -40,7 +40,7 @@ const MainRoutes = {
         { path: 'dashboard', element: <StaffDashboard /> },
         { path: 'approvals', element: <Placeholder /> },
         { path: 'reports',   element: <Placeholder /> },
-        { path: 'users',     element: <AdminUsers /> },
+        { path: 'users',     element: <Placeholder /> },
         { path: 'settings',  element: <Placeholder /> }
       ]
     },
