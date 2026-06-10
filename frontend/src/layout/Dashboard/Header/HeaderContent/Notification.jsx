@@ -51,7 +51,7 @@ export default function Notification() {
   const downMD = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   const anchorRef = useRef(null);
-  const [read, setRead] = useState(2);
+  const [read, setRead] = useState(0);
   const [open, setOpen] = useState(false);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
