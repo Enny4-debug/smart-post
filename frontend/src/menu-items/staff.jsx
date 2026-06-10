@@ -10,11 +10,22 @@ const icons = {
   SettingOutlined
 };
 
+const ROLE_LABELS = {
+  student: 'Student',
+  administrator: 'Administrator',
+  hod_academic: 'HoD Academic',
+  hod_examinations: 'HoD Examinations',
+  campus_manager: 'Campus Manager'
+};
+
+const userRole = (localStorage.getItem('userRole') || 'staff').toLowerCase();
+const displayRole = ROLE_LABELS[userRole] || 'Staff Portal';
+
 // ==============================|| MENU ITEMS - STAFF ||============================== //
 
 const staff = {
   id: 'group-staff',
-  title: 'Staff / Admin Portal',
+  title: `${displayRole} Portal`,
   type: 'group',
   children: [
     {
