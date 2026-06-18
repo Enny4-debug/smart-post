@@ -68,6 +68,10 @@ async def create_request(
         },
     )
     db.add(audit)
+
+    from app.services.notification import notify_approvers_hod_academic
+    await notify_approvers_hod_academic(db, new_request)
+
     await db.commit()
     
     return {"message": "Request submitted successfully", "request_id": str(new_request.request_id)}

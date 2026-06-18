@@ -149,6 +149,37 @@ async def decide(
     db.add(audit)
 
     req.status = next_status
+
+    from app.services.notification import (
+        notify_approvers_hod_exams,
+        notify_approvers_campus_manager,
+        notify_student,
+    )
+
+    if body.decision == "approved":
+        if approver.role == "hod_academic":
+            await notify_approvers_hod_exams(db, req)
+        elif approver.role == "hod_examinations":
+            await notify_approvers_campus_manager(db, req)
+        elif approver.role == "campus_manager":
+            await notify_student(
+                db, req,
+                subject="Postponement Request Approved",
+                body=f"Your postponement request has been fully approved by the Campus Manager.",
+            )
+    elif body.decision == "rejected":
+        await notify_student(
+            db, req,
+            subject="Postponement Request Rejected",
+            body=f"Your postponement request has been rejected by {approver.role.replace('_', ' ').title()}.",
+        )
+    elif body.decision == "queried":
+        await notify_student(
+            db, req,
+            subject="Postponement Request – More Info Needed",
+            body=f"Your postponement request requires additional information. Comments: {body.comments or 'None'}.",
+        )
+
     await db.commit()
 
     return {
