@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from typing import Annotated
+from datetime import datetime, timezone
 from app.dependencies import get_current_user, require_student, require_staff_or_admin
 from app.models.user import User
 
@@ -47,7 +48,8 @@ async def create_request(
         semester=request_in.semester,
         reason=request_in.reason,
         scope=request_in.scope,
-        status=RequestStatus.pending_hod
+        status=RequestStatus.pending_hod,
+        submitted_at=datetime.now(timezone.utc)
     )
     db.add(new_request)
     await db.commit()
@@ -86,7 +88,8 @@ async def my_requests(
             "semester": r.semester,
             "scope": r.scope,
             "status": r.status,
-            "created_at": r.created_at.isoformat() if r.created_at else None
+            "created_at": r.created_at.isoformat() if r.created_at else None,
+            "submitted_at": r.submitted_at.isoformat() if r.submitted_at else None
         }
         for r in requests
     ]

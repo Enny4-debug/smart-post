@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // material-ui
@@ -69,13 +69,20 @@ export default function MyRequests() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const intervalRef = useRef(null);
 
-  useEffect(() => {
+  const fetchRequests = () => {
     client
       .get('/requests/my')
-      .then((res) => setRequests(res.data))
+      .then((res) => { setRequests(res.data); setError(null); })
       .catch(() => setError('Could not load your requests.'))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchRequests();
+    intervalRef.current = setInterval(fetchRequests, 10000);
+    return () => clearInterval(intervalRef.current);
   }, []);
 
   return (
@@ -117,7 +124,7 @@ export default function MyRequests() {
                 {requests.map((req) => (
                   <TableRow key={req.request_id} hover>
                     <TableCell>
-                      <Typography variant="body2">{formatDate(req.created_at)}</Typography>
+                      <Typography variant="body2">{formatDate(req.submitted_at)}</Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2">{req.academic_year}</Typography>

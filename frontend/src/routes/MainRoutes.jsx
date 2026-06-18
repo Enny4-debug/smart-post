@@ -9,6 +9,7 @@ const NewRequest       = Loadable(lazy(() => import('pages/student/NewRequest'))
 const MyRequests       = Loadable(lazy(() => import('pages/student/MyRequests')));
 const Profile          = Loadable(lazy(() => import('pages/profile/index')));
 const StaffDashboard   = Loadable(lazy(() => import('pages/staff/Dashboard')));
+const StaffApprovals   = Loadable(lazy(() => import('pages/staff/Approvals')));
 const AdminDashboard   = Loadable(lazy(() => import('pages/admin/Dashboard')));
 const AdminUsers       = Loadable(lazy(() => import('pages/admin/Users')));
 
@@ -44,7 +45,7 @@ const MainRoutes = {
       path: 'staff',
       children: [
         { path: 'dashboard', element: <StaffDashboard /> },
-        { path: 'approvals', element: <Placeholder /> },
+        { path: 'approvals', element: <StaffApprovals /> },
         { path: 'reports',   element: <Placeholder /> },
         { path: 'users',     element: <Placeholder /> },
         { path: 'settings',  element: <Placeholder /> }
