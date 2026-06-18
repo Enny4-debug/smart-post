@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import CircularProgress from '@mui/material/CircularProgress';
 import Chip from '@mui/material/Chip';
 import Table from '@mui/material/Table';
@@ -11,6 +13,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { DownloadOutlined } from '@ant-design/icons';
 import MainCard from 'components/MainCard';
 import client from 'api/client';
 
@@ -73,6 +76,23 @@ export default function StaffReports() {
     fetchAll();
   }, []);
 
+  const downloadExport = async (format) => {
+    try {
+      const res = await client.get(`/reports/export?format=${format}`, { responseType: 'blob' });
+      const blob = new Blob([res.data]);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `requests.${format}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      // silent
+    }
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
@@ -105,7 +125,14 @@ export default function StaffReports() {
 
   return (
     <Box>
-      <Typography variant="h5" sx={{ mb: 3 }}>Reports & Analytics</Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Typography variant="h5">Reports & Analytics</Typography>
+        <ButtonGroup variant="outlined" size="small">
+          <Button startIcon={<DownloadOutlined />} onClick={() => downloadExport('csv')}>CSV</Button>
+          <Button startIcon={<DownloadOutlined />} onClick={() => downloadExport('xlsx')}>Excel</Button>
+          <Button startIcon={<DownloadOutlined />} onClick={() => downloadExport('pdf')}>PDF</Button>
+        </ButtonGroup>
+      </Box>
 
       <Grid container spacing={3}>
         {/* KPI Cards */}
