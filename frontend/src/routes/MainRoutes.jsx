@@ -11,6 +11,7 @@ const Profile          = Loadable(lazy(() => import('pages/profile/index')));
 const StaffDashboard   = Loadable(lazy(() => import('pages/staff/Dashboard')));
 const StaffApprovals   = Loadable(lazy(() => import('pages/staff/Approvals')));
 const StaffReports     = Loadable(lazy(() => import('pages/staff/Reports')));
+const StaffSettings    = Loadable(lazy(() => import('pages/staff/Settings')));
 const AdminDashboard   = Loadable(lazy(() => import('pages/admin/Dashboard')));
 const AdminUsers       = Loadable(lazy(() => import('pages/admin/Users')));
 const AdminAuditLog    = Loadable(lazy(() => import('pages/admin/AuditLog')));
@@ -50,7 +51,7 @@ const MainRoutes = {
         { path: 'approvals', element: <StaffApprovals /> },
         { path: 'reports',   element: <StaffReports /> },
         { path: 'users',     element: <Placeholder /> },
-        { path: 'settings',  element: <Placeholder /> }
+        { path: 'settings',  element: <StaffSettings /> }
       ]
     },
     // Admin Routes
@@ -60,7 +61,7 @@ const MainRoutes = {
         { path: 'dashboard', element: <AdminDashboard /> },
         { path: 'users',     element: <AdminUsers /> },
         { path: 'audit',     element: <AdminAuditLog /> },
-        { path: 'settings',  element: <Placeholder /> }
+        { path: 'settings',  element: <StaffSettings /> }
       ]
     }
   ]

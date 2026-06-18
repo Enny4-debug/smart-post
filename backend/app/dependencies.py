@@ -90,3 +90,8 @@ require_staff_or_admin = require_roles(
     UserRole.campus_manager,
     UserRole.administrator,
 )
+
+require_admin_or_manager = require_roles(
+    UserRole.administrator,
+    UserRole.campus_manager,
+)

@@ -266,6 +266,24 @@ export default function StaffApprovals() {
                         <strong>Year of Study:</strong> {selected.student?.year_of_study || 'Unknown'}
                       </Typography>
                     </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <Typography variant="body2">
+                        <strong>Fee Balance:</strong>{' '}
+                        {selected.student?.fee_balance != null ? (
+                          <Chip
+                            label={`TZS ${parseFloat(selected.student.fee_balance).toLocaleString()}`}
+                            size="small"
+                            color={
+                              parseFloat(selected.student.fee_balance) >=
+                              parseFloat(selected.student.fee_threshold || 0)
+                                ? 'success'
+                                : 'error'
+                            }
+                            variant="outlined"
+                          />
+                        ) : '\u2014'}
+                      </Typography>
+                    </Grid>
                   </Grid>
                 </Box>
 

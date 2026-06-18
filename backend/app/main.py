@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 import os
 
 from app.config import settings
-from app.routers import auth, users, requests, approvals, documents, reports, admin
+from app.routers import auth, users, requests, approvals, documents, reports, admin, system_config
 
 # ── App instance ──────────────────────────────────────────────────
 app = FastAPI(
@@ -38,6 +38,7 @@ app.include_router(requests.router,  prefix=API_PREFIX)
 app.include_router(approvals.router, prefix=API_PREFIX)
 app.include_router(documents.router, prefix=API_PREFIX)
 app.include_router(reports.router,   prefix=API_PREFIX)
+app.include_router(system_config.router,  prefix=API_PREFIX)
 app.include_router(admin.router,     prefix=API_PREFIX)
 
 

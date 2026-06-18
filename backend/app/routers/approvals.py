@@ -74,6 +74,8 @@ async def get_pending(
                 "student_number": r.student.student_number if r.student else "Unknown",
                 "program": r.student.program if r.student else "Unknown",
                 "year_of_study": r.student.year_of_study if r.student else None,
+                "fee_balance": str(r.student.fee_balance) if r.student else None,
+                "fee_threshold": str(r.student.fee_threshold) if r.student else None,
             } if r.student else None,
             "modules": [
                 {
