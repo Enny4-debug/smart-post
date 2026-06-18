@@ -10,6 +10,7 @@ from app.models.user import User
 from app.models.request import Request, RequestModule
 from app.models.student import Student
 from app.models.approval import Approval
+from app.models.audit_log import AuditLog
 from app.database import get_db
 
 router = APIRouter(prefix="/approvals", tags=["Approvals"])
@@ -129,6 +130,21 @@ async def decide(
         comments=body.comments,
     )
     db.add(approval)
+
+    audit = AuditLog(
+        user_id=approver.user_id,
+        request_id=req.request_id,
+        action="approval_decision",
+        entity_type="request",
+        entity_id=str(req.request_id),
+        metadata_={
+            "decision": body.decision,
+            "comments": body.comments,
+            "role": approver.role,
+            "new_status": next_status,
+        },
+    )
+    db.add(audit)
 
     req.status = next_status
     await db.commit()

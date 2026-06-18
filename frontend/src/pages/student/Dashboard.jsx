@@ -24,14 +24,14 @@ export default function StudentDashboard() {
         // Attempt to fetch current user and their requests
         const [userRes, requestsRes] = await Promise.all([
           apiClient.get('/auth/me'),
-          apiClient.get('/requests/me')
+          apiClient.get('/requests/my')
         ]);
 
         setUser(userRes.data);
         
         const requests = requestsRes.data || [];
-        const pending = requests.filter(r => r.status === 'PENDING_HOD' || r.status === 'PENDING_EXAMS' || r.status === 'PENDING_MANAGER').length;
-        const approved = requests.filter(r => r.status === 'APPROVED').length;
+        const pending = requests.filter(r => r.status === 'pending_hod' || r.status === 'pending_hod_exams' || r.status === 'pending_manager').length;
+        const approved = requests.filter(r => r.status === 'approved').length;
 
         setStats({
           total: requests.length,

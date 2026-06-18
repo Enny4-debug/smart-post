@@ -10,8 +10,10 @@ const MyRequests       = Loadable(lazy(() => import('pages/student/MyRequests'))
 const Profile          = Loadable(lazy(() => import('pages/profile/index')));
 const StaffDashboard   = Loadable(lazy(() => import('pages/staff/Dashboard')));
 const StaffApprovals   = Loadable(lazy(() => import('pages/staff/Approvals')));
+const StaffReports     = Loadable(lazy(() => import('pages/staff/Reports')));
 const AdminDashboard   = Loadable(lazy(() => import('pages/admin/Dashboard')));
 const AdminUsers       = Loadable(lazy(() => import('pages/admin/Users')));
+const AdminAuditLog    = Loadable(lazy(() => import('pages/admin/AuditLog')));
 
 // render - Placeholder pages
 const Placeholder = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
@@ -46,7 +48,7 @@ const MainRoutes = {
       children: [
         { path: 'dashboard', element: <StaffDashboard /> },
         { path: 'approvals', element: <StaffApprovals /> },
-        { path: 'reports',   element: <Placeholder /> },
+        { path: 'reports',   element: <StaffReports /> },
         { path: 'users',     element: <Placeholder /> },
         { path: 'settings',  element: <Placeholder /> }
       ]
@@ -57,7 +59,7 @@ const MainRoutes = {
       children: [
         { path: 'dashboard', element: <AdminDashboard /> },
         { path: 'users',     element: <AdminUsers /> },
-        { path: 'audit',     element: <Placeholder /> },
+        { path: 'audit',     element: <AdminAuditLog /> },
         { path: 'settings',  element: <Placeholder /> }
       ]
     }

@@ -124,7 +124,7 @@ export default function MyRequests() {
                 {requests.map((req) => (
                   <TableRow key={req.request_id} hover>
                     <TableCell>
-                      <Typography variant="body2">{formatDate(req.submitted_at)}</Typography>
+                      <Typography variant="body2">{formatDate(req.submitted_at || req.created_at)}</Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2">{req.academic_year}</Typography>

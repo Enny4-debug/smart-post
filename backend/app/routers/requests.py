@@ -13,6 +13,7 @@ from sqlalchemy import select
 from app.database import get_db
 from app.models.student import Student
 from app.models.request import Request
+from app.models.audit_log import AuditLog
 from app.models.enums import RequestStatus, PostponementScope
 
 class RequestCreate(BaseModel):
@@ -52,6 +53,21 @@ async def create_request(
         submitted_at=datetime.now(timezone.utc)
     )
     db.add(new_request)
+    await db.flush()
+
+    audit = AuditLog(
+        user_id=user.user_id,
+        request_id=new_request.request_id,
+        action="request_created",
+        entity_type="request",
+        entity_id=str(new_request.request_id),
+        metadata_={
+            "academic_year": request_in.academic_year,
+            "semester": request_in.semester,
+            "scope": request_in.scope,
+        },
+    )
+    db.add(audit)
     await db.commit()
     
     return {"message": "Request submitted successfully", "request_id": str(new_request.request_id)}

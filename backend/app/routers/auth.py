@@ -8,7 +8,7 @@ from passlib.context import CryptContext
 
 from app.database import get_db
 from app.models.user import User
-from app.dependencies import create_access_token, create_refresh_token
+from app.dependencies import create_access_token, create_refresh_token, get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -47,6 +47,21 @@ async def login(
         "role": user.role,
         "name": user.name,
         "profile_picture": user.profile_picture,
+    }
+
+
+@router.get("/me", summary="Get current authenticated user")
+async def get_me(current_user: Annotated[User, Depends(get_current_user)]):
+    return {
+        "user_id": str(current_user.user_id),
+        "name": current_user.name,
+        "email": current_user.email,
+        "role": current_user.role,
+        "department": current_user.department,
+        "profile_picture": current_user.profile_picture,
+        "is_active": current_user.is_active,
+        "last_login_at": current_user.last_login_at.isoformat() if current_user.last_login_at else None,
+        "created_at": current_user.created_at.isoformat() if current_user.created_at else None,
     }
 
 

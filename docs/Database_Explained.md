@@ -313,44 +313,39 @@ USER ──────────────────► STUDENT
 
 ---
 
-## Section 10 — Seeding Default Users
+## Section 12 — Seeding Default Users
 
-To quickly initialise the database with the three default accounts (Admin, Staff, Student) you can run the **seed script** located at `backend/scripts/seed.py`.
+To quickly initialise the database with all user accounts, run the **seed script** at `backend/scripts/seed.py`.
 
 ### Prerequisites
-1. **Navigate to the project root** – this is the folder that contains the `backend` directory.
-2. **Activate the Python virtual environment** (if it isn’t already active):
+1. **Navigate to the project root** – the folder containing the `backend` directory.
+2. **Activate the Python virtual environment**:
    ```bash
    source backend/venv/bin/activate   # Linux/macOS
-   # or
-   .\backend\venv\Scripts\activate   # Windows PowerShell
    ```
 
 ### Run the script
-From the **project root** execute:
+From the **project root**:
 ```bash
 PYTHONPATH=backend backend/venv/bin/python backend/scripts/seed.py
 ```
-Or, if you prefer changing into the `backend` directory first:
-```bash
-cd backend
-source venv/bin/activate
-PYTHONPATH=. python scripts/seed.py
-```
-Both commands achieve the same result – they add three users to the database:
-- **System Admin** – `admin@iaacollege.ac.tz` / `admin123`
-- **Department Head (Staff)** – `hod.cs@iaacollege.ac.tz` / `staff123`
-- **Student** – `student@iaacollege.ac.tz` / `student123`
 
-> **Tip:** After running the script you should see a console output similar to:
-> `Successfully seeded Admin, Staff, and Student users!`
+### Default Accounts
 
-If you encounter any errors, ensure that:
-- The database service is running (FastAPI should be up on `localhost:8000`).
-- The virtual environment has the required packages (`pip install -r requirements.txt`).
-- The `PYTHONPATH` points to the directory containing the `app` package.
+| Role | Email | Password | Display Name |
+|---|---|---|---|
+| **Administrator** | `admin@iaacollege.ac.tz` | `admin123` | System Admin |
+| **HoD Academic** | `hod.cs@iaacollege.ac.tz` | `staff123` | Dr. Smith |
+| **HoD Examinations** | `exams@iaacollege.ac.tz` | `staff123` | Ms. Johnson |
+| **Campus Manager** | `manager@iaacollege.ac.tz` | `manager123` | Mr. Kamau |
+| **Student** | `student@iaacollege.ac.tz` | `student123` | Enny Mwaseba |
 
-You can now log in with any of the accounts on the SmartPost UI.
+> The full approval flow: **Student submits → HoD Academic → HoD Examinations → Campus Manager → Approved**
+
+If you encounter any errors, ensure:
+- The database service is running (FastAPI on `localhost:8000`).
+- The virtual environment has required packages (`pip install -r requirements.txt`).
+- `PYTHONPATH` points to the directory containing the `app` package.
 
 ---
 

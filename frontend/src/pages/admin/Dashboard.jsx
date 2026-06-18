@@ -26,7 +26,8 @@ export default function AdminDashboard() {
 
   const totalRequests = stats?.total_requests ?? 0;
   const actionRequired = stats?.action_required ?? 0;
-  const escalated = stats?.escalated ?? 0;
+  const totalApproved = stats?.total_approved ?? 0;
+  const totalRejected = stats?.total_rejected ?? 0;
 
   return (
     <Grid container rowSpacing={4.5} columnSpacing={2.75}>
@@ -65,9 +66,16 @@ export default function AdminDashboard() {
             </MainCard>
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-            <MainCard title="Escalated" content={false}>
+            <MainCard title="Approved" content={false}>
+              <Typography variant="h3" color="success.main" sx={{ p: 2 }}>
+                {totalApproved}
+              </Typography>
+            </MainCard>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+            <MainCard title="Rejected" content={false}>
               <Typography variant="h3" color="error.main" sx={{ p: 2 }}>
-                {escalated}
+                {totalRejected}
               </Typography>
             </MainCard>
           </Grid>
