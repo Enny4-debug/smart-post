@@ -82,7 +82,24 @@ The Backend relies on several external packages (like FastAPI and SQLAlchemy). W
    python -m venv venv
    ```
 
-2. Install the required packages:
+2. Activate the virtual environment:
+
+   **For Linux/Mac:**
+   ```bash
+   source venv/bin/activate
+   ```
+
+   **For Windows 11 (Command Prompt):**
+   ```cmd
+   venv\Scripts\activate.bat
+   ```
+
+   **For Windows 11 (PowerShell):**
+   ```powershell
+   venv\Scripts\Activate.ps1
+   ```
+
+3. Install the required packages:
 
    **For Linux:**
    ```bash
