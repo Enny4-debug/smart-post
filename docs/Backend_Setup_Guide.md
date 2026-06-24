@@ -99,16 +99,11 @@ The Backend relies on several external packages (like FastAPI and SQLAlchemy). W
    venv\Scripts\Activate.ps1
    ```
 
-3. Install the required packages:
+3. Install the required packages (make sure the virtual environment is activated):
 
-   **For Linux:**
+   **For Linux/Mac & Windows 11:**
    ```bash
-   venv/bin/pip install -r requirements.txt
-   ```
-
-   **For Windows 11:**
-   ```cmd
-   venv\Scripts\pip install -r requirements.txt
+   pip install -r requirements.txt
    ```
 
 ### Step 3.5: Build the Database Tables
@@ -116,14 +111,9 @@ Right now, the database is empty. We need to tell our system to create all the t
 
 Run the database migrations:
 
-**For Linux:**
+**For Linux/Mac & Windows 11:**
 ```bash
-venv/bin/alembic upgrade head
-```
-
-**For Windows 11:**
-```cmd
-venv\Scripts\alembic upgrade head
+alembic upgrade head
 ```
 
 *(If you open Beekeeper Studio now and connect to `smartpost`, you will see all 11 tables exist!)*
@@ -136,14 +126,9 @@ Once everything is installed, starting the server is very simple.
 
 From inside the `backend` folder, run this command:
 
-**For Linux:**
+**For Linux/Mac & Windows 11:**
 ```bash
-venv/bin/uvicorn app.main:app --reload
-```
-
-**For Windows 11:**
-```cmd
-venv\Scripts\uvicorn app.main:app --reload
+uvicorn app.main:app --reload
 ```
 
 **What this means:**
@@ -183,3 +168,11 @@ You can click any box, click the **"Try it out"** button, fill in the required f
 **Error: "Peer authentication failed" when creating the database**
 - **Cause:** Linux is trying to log you into the database using your computer's username instead of the database username.
 - **Fix:** Follow Step 3.2 carefully, ensuring you use the `sudo -u postgres` prefix so the command runs as the correct user.
+
+**Error: "Failed building wheel for pydantic-core" or "asyncpg" during pip install (Windows)**
+- **Cause:** You are likely using a brand new Python version (like 3.13) or a 32-bit version of Python where pre-compiled packages aren't available yet.
+- **Fix:** Uninstall your current Python and install **Python 3.12 (64-bit)** from python.org. After installing, delete your `venv` folder and start again from Step 3.4.
+
+**Error: "'alembic' is not recognized as an internal or external command"**
+- **Cause:** Your `pip install -r requirements.txt` command failed in the previous step, so Alembic was never actually installed. 
+- **Fix:** Fix the `pip install` errors first (see the wheel building error above). Once the installation succeeds, the `alembic` command will work.
