@@ -11,7 +11,7 @@ from app.models.user import User
 from app.dependencies import create_access_token, create_refresh_token, get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 
 @router.post("/login", summary="Login and receive JWT tokens")

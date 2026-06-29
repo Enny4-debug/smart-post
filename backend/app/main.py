@@ -52,10 +52,10 @@ async def health():
 # ── Startup / Shutdown events ─────────────────────────────────────
 @app.on_event("startup")
 async def on_startup():
-    print(f"🚀 {settings.app_name} API started [{settings.app_env}]")
-    print(f"   Docs → http://127.0.0.1:8000/api/docs")
+    print(f"*** {settings.app_name} API started [{settings.app_env}] ***")
+    print(f"   Docs -> http://127.0.0.1:8000/api/docs")
 
 
 @app.on_event("shutdown")
 async def on_shutdown():
-    print(f"🛑 {settings.app_name} API shutting down.")
+    print(f"*** {settings.app_name} API shutting down. ***")
