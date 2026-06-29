@@ -1,6 +1,6 @@
 # SmartPost — Project Status Report
 **Last Updated:** 2026-06-29  
-**Overall Completion: ~70%**
+**Overall Completion: ~85%**
 
 ---
 
@@ -42,12 +42,17 @@
 
 ---
 
-## 2. Postponement & Approval Subsystem — 90% ✅
+## 2. Postponement & Approval Subsystem — 98% ✅
 
 ### ✅ Done
 - Student: Submit a new postponement request (academic year, semester, scope, reason)
 - Student: View their submitted requests with status badges ("My Requests" page, polls every 10s)
+- Student: Save request as draft (`POST /requests/draft`) — no verification, no notification
+- Student: Submit saved draft (`POST /requests/{id}/submit`) — runs verification, notifies HoD
+- Student: Re-submit after rejection (`POST /requests/{id}/resubmit`) — creates linked child request with `resubmission_count` incremented
 - Student Dashboard: Recent requests table (last 5)
+- Student: View full request timeline (`GET /requests/{id}`) — evidence files, approvals, audit log
+- Frontend Request Detail page (`/student/requests/:id`): info card, student info, approvals, evidence table with download/preview, timeline with colored dots
 - Backend: `POST /requests/` — creates request with `pending_hod` status, writes audit log
 - Backend: `GET /requests/my` — returns requests for logged-in student
 - Auto-create student profile record on first request if not present
@@ -65,46 +70,45 @@
 - Fee balance badge in approvals detail dialog (color-coded green/red)
 
 ### ❌ Remaining
-- [ ] Student: Re-submit after rejection or query response
-- [ ] Student: View detailed request timeline (who approved what and when)
-- [ ] Draft-save a request before final submission
 - [ ] Email notifications alongside in-app notifications
 
 ---
 
-## 3. Verification Subsystem — 5% ❌
+## 3. Verification Subsystem — 90% ✅
 
 ### ✅ Done
 - DB model has `fee_balance`, `fee_threshold`, `cumulative_postponed_years` fields on `Student`
 - Fee balance displayed (read-only) in approvals detail dialog
+- Fee balance check at submission time: `Student.fee_balance < Student.fee_threshold` → `fee_arrears`
+- Max postponement years check: compares `Student.cumulative_postponed_years` against `SystemConfig.max_postponement_years`
+- Auto-flags request as `ineligible` with reason (`fee_arrears` / `max_postponements_reached`) and detail message
+- `admin_override` field on Request model: admin can bypass ineligibility
+- `POST /admin/override/{request_id}` — sets status to `pending_hod`, records note + admin info, writes audit log
+- `GET /admin/ineligible` — lists all ineligible requests for admin review
+- Audit log entries with `admin_override` action type
 
 ### ❌ Remaining
-- [ ] Check fee balance before allowing a request submission (block if outstanding fees exceed threshold)
-- [ ] Check if student has exceeded maximum cumulative postponed years
-- [ ] Auto-flag request as `ineligible` with reason:
-  - `fee_arrears` — owes fees
-  - `max_postponements_reached` — exceeded limit
-  - `academic_probation` — on probation
-- [ ] Admin override: allow admin to bypass ineligibility with a note
 - [ ] Sync student data from IAA's existing database (if API is available)
+- [ ] `academic_probation` check
 
 ---
 
-## 4. Document Management Subsystem — 10% ❌
+## 4. Document Management Subsystem — 95% ✅
 
 ### ✅ Done
-- UI file upload button exists on New Request form (non-functional stub)
-- `uploads/` directory configured in backend settings
-- `EvidenceFile` model exists in the database schema
+- `POST /documents/{request_id}/upload` — multipart file upload, validates PDF/JPG/PNG, max 5MB
+- Saves to `uploads/` directory with UUID filename
+- `GET /documents/{request_id}/files` — lists non-deleted evidence for a request
+- `GET /documents/download/{evidence_id}` — serves file for download/inline view
+- `DELETE /documents/{evidence_id}` — soft delete with audit trail
+- Frontend: File selector with progress bar on New Request form
+- Frontend: Uploads happen after request creation (request_id available)
+- Frontend: Remove file button + list of pending uploads
+- Frontend: Download + preview on Request Detail page (modal with image/PDF iframe)
+- Audit log entries for `evidence_uploaded` and `evidence_deleted` actions
 
 ### ❌ Remaining
-- [ ] Backend: `POST /documents/upload` — accept multipart file, save to `uploads/` directory
-- [ ] Validate file type (PDF, JPG, PNG only) and size (max 5MB)
-- [ ] Link uploaded file to a specific request (`request_id`)
-- [ ] Backend: `GET /documents/{request_id}` — list documents attached to a request
-- [ ] Frontend: Display attached documents on request detail view
-- [ ] Allow staff to download/view evidence when reviewing a request
-- [ ] Delete document (student can delete before submission)
+- [ ] Allow staff to download/view evidence from within the approvals dialog
 
 ---
 
@@ -178,7 +182,7 @@
 
 ---
 
-## 8. UI / UX Polish — 80% ✅
+## 8. UI / UX Polish — 85% ✅
 
 ### ✅ Done
 - SmartPost branding logo (replaces Mantis logo)
@@ -187,15 +191,15 @@
 - Responsive layout (MUI Grid)
 - Role label shown in sidebar group title
 - Staff Approvals page — full functional table with detail dialog + decision confirmation
-- Student MyRequests — auto-polls every 10 seconds
+- Student MyRequests — auto-polls every 10 seconds, rows clickable → detail page, action buttons (Resubmit for rejected/queried, Edit Draft)
 - Staff Dashboard — pending approvals table
 - Student Dashboard — recent requests table
 - Admin Dashboard — user management table + system rules card
 - Reports page — charts + export buttons
 - Dynamic "Welcome back, {name}" on student dashboard
+- Request Detail page: info card, student info, approvals list, evidence file table with download/preview modal, timeline with color-coded dots
 
 ### ❌ Remaining
-- [ ] Request Detail page (student clicks a request to see full timeline)
 - [ ] 404 / Error boundary pages
 - [ ] Loading skeleton screens instead of circular spinner
 - [ ] Toast notifications (Snackbar) instead of page alerts
@@ -229,11 +233,12 @@
 2. Request status progression (full multi-stage workflow) ✅
 3. In-app notifications on status changes ✅
 
-### Phase 2 — Data Integrity (Next)
-4. File upload (evidence documents) — backend + frontend
-5. Verification checks (fee balance, postponement limits)
-6. Admin override for ineligible requests
-7. Request detail / timeline page
+### Phase 2 — Data Integrity ✅ (Complete)
+4. File upload (evidence documents) — backend + frontend ✅
+5. Verification checks (fee balance, postponement limits) ✅
+6. Admin override for ineligible requests ✅
+7. Request detail / timeline page ✅
+8. Draft-save + re-submit after rejection ✅
 
 ### Phase 3 — Reporting ✅ (Complete)
 8. Real KPI data from DB ✅

@@ -1,14 +1,16 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
 from typing import Annotated
+from pydantic import BaseModel
 
 from app.dependencies import require_admin, require_staff_or_admin
 from app.database import get_db
 from app.models.user import User
 from app.models.request import Request
 from app.models.audit_log import AuditLog
+from app.models.enums import AuditAction
 
 router = APIRouter(prefix="/admin", tags=["Administration"])
 
@@ -121,6 +123,72 @@ async def get_audit_log(
 @router.get("/activity", summary="System activity overview")
 async def system_activity(admin: Annotated[User, Depends(require_admin)]):
     return {"message": "System activity — coming soon"}
+
+
+@router.get("/ineligible", summary="List ineligible requests [Admin]")
+async def list_ineligible(
+    admin: Annotated[User, Depends(require_admin)],
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(
+        select(Request)
+        .where(Request.status == "ineligible")
+        .order_by(Request.created_at.desc())
+    )
+    reqs = result.scalars().all()
+    return [
+        {
+            "request_id": str(r.request_id),
+            "academic_year": r.academic_year,
+            "semester": r.semester,
+            "reason": r.reason,
+            "scope": r.scope,
+            "ineligibility_reason": r.ineligibility_reason,
+            "ineligibility_detail": r.ineligibility_detail,
+            "admin_override": r.admin_override,
+            "created_at": r.created_at.isoformat() if r.created_at else None,
+        }
+        for r in reqs
+    ]
+
+
+class OverrideInput(BaseModel):
+    note: str = ""
+
+
+@router.post("/override/{request_id}", summary="Admin override for ineligible requests")
+async def admin_override(
+    request_id: str,
+    body: OverrideInput,
+    admin: Annotated[User, Depends(require_admin)],
+    db: AsyncSession = Depends(get_db),
+):
+    from datetime import datetime, timezone
+
+    result = await db.execute(select(Request).where(Request.request_id == request_id))
+    req = result.scalar_one_or_none()
+    if not req:
+        raise HTTPException(404, "Request not found")
+    if req.status != "ineligible":
+        raise HTTPException(400, f"Request is not ineligible (current status: {req.status})")
+
+    req.status = "pending_hod"
+    req.admin_override = True
+    req.admin_override_by = admin.user_id
+    req.admin_override_note = body.note
+
+    audit = AuditLog(
+        user_id=admin.user_id,
+        request_id=req.request_id,
+        action=AuditAction.admin_override,
+        entity_type="request",
+        entity_id=str(req.request_id),
+        metadata_={"note": body.note, "previous_status": "ineligible", "new_status": "pending_hod"},
+    )
+    db.add(audit)
+    await db.commit()
+
+    return {"message": "Override applied, request moved to pending_hod", "request_id": str(req.request_id)}
 
 
 @router.post("/modules", summary="Add a module to the catalogue")
