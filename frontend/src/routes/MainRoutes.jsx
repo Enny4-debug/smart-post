@@ -7,6 +7,7 @@ import DashboardLayout from 'layout/Dashboard';
 const StudentDashboard = Loadable(lazy(() => import('pages/student/Dashboard')));
 const NewRequest       = Loadable(lazy(() => import('pages/student/NewRequest')));
 const MyRequests       = Loadable(lazy(() => import('pages/student/MyRequests')));
+const RequestDetail    = Loadable(lazy(() => import('pages/student/RequestDetail')));
 const Profile          = Loadable(lazy(() => import('pages/profile/index')));
 const StaffDashboard   = Loadable(lazy(() => import('pages/staff/Dashboard')));
 const StaffApprovals   = Loadable(lazy(() => import('pages/staff/Approvals')));
@@ -40,6 +41,7 @@ const MainRoutes = {
         { path: 'dashboard',   element: <StudentDashboard /> },
         { path: 'new-request', element: <NewRequest /> },
         { path: 'my-requests', element: <MyRequests /> },
+        { path: 'requests/:id', element: <RequestDetail /> },
         { path: 'profile',     element: <Profile /> }
       ]
     },

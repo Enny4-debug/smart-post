@@ -118,11 +118,12 @@ export default function MyRequests() {
                   <TableCell>Semester</TableCell>
                   <TableCell>Scope</TableCell>
                   <TableCell>Status</TableCell>
+                  <TableCell align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {requests.map((req) => (
-                  <TableRow key={req.request_id} hover>
+                  <TableRow key={req.request_id} hover sx={{ cursor: 'pointer' }} onClick={() => navigate(`/student/requests/${req.request_id}`)}>
                     <TableCell>
                       <Typography variant="body2">{formatDate(req.submitted_at || req.created_at)}</Typography>
                     </TableCell>
@@ -145,11 +146,40 @@ export default function MyRequests() {
                         variant={req.status === 'approved' ? 'filled' : 'outlined'}
                       />
                     </TableCell>
+                    <TableCell align="right">
+                      {(req.status === 'rejected' || req.status === 'queried') && (
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          color="primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            client.post(`/requests/${req.request_id}/resubmit`)
+                              .then(() => fetchRequests())
+                              .catch(() => {});
+                          }}
+                        >
+                          Resubmit
+                        </Button>
+                      )}
+                      {req.status === 'draft' && (
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/student/new-request?edit=${req.request_id}`);
+                          }}
+                        >
+                          Edit Draft
+                        </Button>
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))}
                 {requests.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} align="center" sx={{ py: 6 }}>
+                    <TableCell colSpan={6} align="center" sx={{ py: 6 }}>
                       <Typography color="text.secondary" gutterBottom>
                         You haven't submitted any postponement requests yet.
                       </Typography>
