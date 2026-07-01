@@ -20,6 +20,7 @@ const AdminAuditLog    = Loadable(lazy(() => import('pages/admin/AuditLog')));
 
 // render - Placeholder pages
 const Placeholder = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
+const NotFound    = Loadable(lazy(() => import('pages/extra-pages/NotFound')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -38,6 +39,11 @@ const MainRoutes = {
     {
       path: 'change-password',
       element: <ChangePassword />
+    },
+    // Catch-all
+    {
+      path: '*',
+      element: <NotFound />
     },
     // Student Routes
     {

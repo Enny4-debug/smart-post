@@ -17,6 +17,7 @@ import Stack from '@mui/material/Stack';
 
 // project imports
 import MainCard from 'components/MainCard';
+import SkeletonTable from 'components/SkeletonTable';
 import client from 'api/client';
 
 // icons
@@ -101,9 +102,7 @@ export default function MyRequests() {
 
       <MainCard content={false}>
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-            <CircularProgress />
-          </Box>
+          <SkeletonTable rows={5} cols={5} />
         ) : error ? (
           <Box sx={{ p: 3 }}>
             <Typography color="error">{error}</Typography>

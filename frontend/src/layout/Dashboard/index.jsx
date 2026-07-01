@@ -11,6 +11,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Loader from 'components/Loader';
 import Breadcrumbs from 'components/@extended/Breadcrumbs';
+import ErrorBoundary from 'components/ErrorBoundary';
 
 import { handlerDrawerOpen, useGetMenuMaster } from 'api/menu';
 
@@ -45,7 +46,9 @@ export default function DashboardLayout() {
           }}
         >
           {pathname !== '/apps/profiles/account/my-account' && <Breadcrumbs />}
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
           <Footer />
         </Box>
       </Box>

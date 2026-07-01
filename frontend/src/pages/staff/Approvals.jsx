@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import CircularProgress from '@mui/material/CircularProgress';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -23,6 +22,7 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 
 import MainCard from 'components/MainCard';
+import SkeletonTable from 'components/SkeletonTable';
 import client from 'api/client';
 import { useSnackbar } from 'contexts/SnackbarContext';
 
@@ -30,6 +30,7 @@ import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import CheckCircleOutlined from '@ant-design/icons/CheckCircleOutlined';
 import CloseCircleOutlined from '@ant-design/icons/CloseCircleOutlined';
 import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined';
+import DownloadOutlined from '@ant-design/icons/DownloadOutlined';
 
 const STATUS_LABELS = {
   pending_hod: 'Pending HoD Academic',
@@ -148,9 +149,7 @@ export default function StaffApprovals() {
 
       <MainCard content={false}>
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-            <CircularProgress />
-          </Box>
+          <SkeletonTable rows={5} cols={6} />
         ) : error ? (
           <Box sx={{ p: 3 }}>
             <Typography color="error">{error}</Typography>
@@ -350,11 +349,26 @@ export default function StaffApprovals() {
                       <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                         Evidence Files
                       </Typography>
-                      {selected.evidence_files.map((ef) => (
-                        <Typography key={ef.evidence_id} variant="body2">
-                          {ef.original_name} ({ef.file_type})
-                        </Typography>
-                      ))}
+                      <Stack spacing={1}>
+                        {selected.evidence_files.map((ef) => (
+                          <Stack key={ef.evidence_id} direction="row" alignItems="center" spacing={1}>
+                            <Typography variant="body2" sx={{ flex: 1 }}>
+                              {ef.original_name}
+                            </Typography>
+                            <Chip label={ef.file_type} size="small" variant="outlined" />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              component="a"
+                              href={`http://localhost:8000/api/v1/documents/download/${ef.evidence_id}`}
+                              target="_blank"
+                              title="Download"
+                            >
+                              <DownloadOutlined />
+                            </IconButton>
+                          </Stack>
+                        ))}
+                      </Stack>
                     </Box>
                   </>
                 )}

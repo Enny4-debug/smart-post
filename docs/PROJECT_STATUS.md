@@ -1,6 +1,6 @@
 # SmartPost — Project Status Report
-**Last Updated:** 2026-06-29  
-**Overall Completion: ~85%**
+**Last Updated:** 2026-07-01  
+**Overall Completion: ~92%**
 
 ---
 
@@ -15,7 +15,7 @@
 
 ---
 
-## 1. User Management Subsystem — 95% ✅
+## 1. User Management Subsystem — 97% ✅
 
 ### ✅ Done
 - JWT authentication (login, token refresh)
@@ -34,9 +34,11 @@
 - Logout (clears localStorage, redirects to login)
 - Dynamic profile name/role in header
 - `GET /auth/me` endpoint
+- Password change: `POST /auth/change-password` with current_password + new_password validation
+- Frontend Change Password page at `/change-password` route
+- "Change Password" option in header profile dropdown (all roles)
 
 ### ❌ Remaining
-- [ ] Password change (allow user to update own password)
 - [ ] Password reset via email (forgot password flow)
 - [ ] Admin: enforce strong password rules on creation
 
@@ -108,7 +110,7 @@
 - Audit log entries for `evidence_uploaded` and `evidence_deleted` actions
 
 ### ❌ Remaining
-- [ ] Allow staff to download/view evidence from within the approvals dialog
+- [x] Allow staff to download/view evidence from within the approvals dialog (download icon in detail dialog)
 
 ---
 
@@ -152,7 +154,7 @@
 
 ---
 
-## 7. Notification System — 90% ✅
+## 7. Notification System — 95% ✅
 
 ### ✅ Done
 - `Notification` model with `notifications` table (recipient, subject, body, is_read, sent_at, etc.)
@@ -178,11 +180,10 @@
 
 ### ❌ Remaining
 - [ ] Email sending via SMTP (config exists, service not wired)
-- [ ] Automatic escalation check (cron/scheduler — currently manual endpoint)
 
 ---
 
-## 8. UI / UX Polish — 85% ✅
+## 8. UI / UX Polish — 95% ✅
 
 ### ✅ Done
 - SmartPost branding logo (replaces Mantis logo)
@@ -199,21 +200,28 @@
 - Dynamic "Welcome back, {name}" on student dashboard
 - Request Detail page: info card, student info, approvals list, evidence file table with download/preview modal, timeline with color-coded dots
 
+### ✅ Done (new)
+- Snackbar Context — app-wide toast notifications (success/error/warning/info) via `useSnackbar()` hook
+- New Request and Staff Approvals pages use snackbar instead of inline alerts
+- 404 page at `*` catch-all route
+- ErrorBoundary component wrapping Dashboard layout (`<Outlet>`)
+- Password Change page with form validation (current/new/confirm password)
+- SkeletonTable component replacing CircularProgress on MyRequests and Approvals tables
+
 ### ❌ Remaining
-- [ ] 404 / Error boundary pages
-- [ ] Loading skeleton screens instead of circular spinner
-- [ ] Toast notifications (Snackbar) instead of page alerts
 - [ ] Mobile responsiveness review
 
 ---
 
-## 9. Infrastructure / DevOps — 20% ❌
+## 9. Infrastructure / DevOps — 35% ❌
 
 ### ✅ Done
 - CORS configured for `localhost:3000`
 - `.env` file for configuration
 - Database seed script (`scripts/seed.py`) — seeds all 5 user roles
 - `openpyxl` + `reportlab` installed for XLSX/PDF export
+- APScheduler background worker — automated escalation check every 15 minutes
+- Scheduler wired into FastAPI startup/shutdown lifecycle
 
 ### ❌ Remaining
 - [ ] Production CORS update (real domain instead of localhost)
@@ -221,7 +229,6 @@
 - [ ] CI/CD pipeline
 - [ ] Production deployment (e.g., VPS, Railway, Render)
 - [ ] HTTPS setup
-- [ ] Background task worker (for email sending + escalation cron)
 - [ ] Email service integration (SMTP configured in `.env` but not connected)
 
 ---
@@ -246,11 +253,18 @@
 10. Audit log page ✅
 11. Export to PDF/Excel ✅
 
-### Phase 4 — Polish & Deployment
-12. Toast notifications
-13. Password change
-14. Email notifications
-15. Dockerize + deploy to production
+### Phase 4 — Polish & Deployment ✅ (Complete)
+12. Toast notifications (Snackbar) ✅
+13. Password change ✅
+14. 404 / Error boundary pages ✅
+15. Skeleton loading screens ✅
+16. Background escalation worker (APScheduler) ✅
+
+### Phase 5 — Production Ready
+17. Email notifications (SMTP integration)
+18. Dockerize + deploy to production
+19. Password reset via email
+20. Mobile responsiveness review
 
 ---
 
