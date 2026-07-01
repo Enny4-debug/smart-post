@@ -9,6 +9,7 @@ const NewRequest       = Loadable(lazy(() => import('pages/student/NewRequest'))
 const MyRequests       = Loadable(lazy(() => import('pages/student/MyRequests')));
 const RequestDetail    = Loadable(lazy(() => import('pages/student/RequestDetail')));
 const Profile          = Loadable(lazy(() => import('pages/profile/index')));
+const ChangePassword   = Loadable(lazy(() => import('pages/profile/ChangePassword')));
 const StaffDashboard   = Loadable(lazy(() => import('pages/staff/Dashboard')));
 const StaffApprovals   = Loadable(lazy(() => import('pages/staff/Approvals')));
 const StaffReports     = Loadable(lazy(() => import('pages/staff/Reports')));
@@ -34,6 +35,10 @@ const MainRoutes = {
       path: 'profile',
       element: <Profile />
     },
+    {
+      path: 'change-password',
+      element: <ChangePassword />
+    },
     // Student Routes
     {
       path: 'student',
@@ -42,7 +47,8 @@ const MainRoutes = {
         { path: 'new-request', element: <NewRequest /> },
         { path: 'my-requests', element: <MyRequests /> },
         { path: 'requests/:id', element: <RequestDetail /> },
-        { path: 'profile',     element: <Profile /> }
+        { path: 'profile',     element: <Profile /> },
+        { path: 'change-password', element: <ChangePassword /> }
       ]
     },
     // Staff Routes (HoD, Campus Manager)
@@ -53,7 +59,8 @@ const MainRoutes = {
         { path: 'approvals', element: <StaffApprovals /> },
         { path: 'reports',   element: <StaffReports /> },
         { path: 'users',     element: <Placeholder /> },
-        { path: 'settings',  element: <StaffSettings /> }
+        { path: 'settings',  element: <StaffSettings /> },
+        { path: 'change-password', element: <ChangePassword /> }
       ]
     },
     // Admin Routes
@@ -63,7 +70,8 @@ const MainRoutes = {
         { path: 'dashboard', element: <AdminDashboard /> },
         { path: 'users',     element: <AdminUsers /> },
         { path: 'audit',     element: <AdminAuditLog /> },
-        { path: 'settings',  element: <StaffSettings /> }
+        { path: 'settings',  element: <StaffSettings /> },
+        { path: 'change-password', element: <ChangePassword /> }
       ]
     }
   ]

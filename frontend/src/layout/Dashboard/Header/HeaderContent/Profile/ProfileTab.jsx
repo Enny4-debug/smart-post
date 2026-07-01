@@ -11,6 +11,7 @@ import EditOutlined from '@ant-design/icons/EditOutlined';
 import ProfileOutlined from '@ant-design/icons/ProfileOutlined';
 import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
 import UserOutlined from '@ant-design/icons/UserOutlined';
+import KeyOutlined from '@ant-design/icons/KeyOutlined';
 
 // hooks
 import useLogout from 'hooks/useLogout';
@@ -35,6 +36,12 @@ export default function ProfileTab() {
           <UserOutlined />
         </ListItemIcon>
         <ListItemText primary="View Profile" />
+      </ListItemButton>
+      <ListItemButton onClick={() => navigate('/change-password')}>
+        <ListItemIcon>
+          <KeyOutlined />
+        </ListItemIcon>
+        <ListItemText primary="Change Password" />
       </ListItemButton>
       <ListItemButton onClick={logout}>
         <ListItemIcon>

@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timezone
 from typing import Annotated
 from passlib.context import CryptContext
+from pydantic import BaseModel
 
 from app.database import get_db
 from app.models.user import User
@@ -12,6 +13,11 @@ from app.dependencies import create_access_token, create_refresh_token, get_curr
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
+
+
+class ChangePasswordInput(BaseModel):
+    current_password: str
+    new_password: str
 
 
 @router.post("/login", summary="Login and receive JWT tokens")
@@ -63,6 +69,29 @@ async def get_me(current_user: Annotated[User, Depends(get_current_user)]):
         "last_login_at": current_user.last_login_at.isoformat() if current_user.last_login_at else None,
         "created_at": current_user.created_at.isoformat() if current_user.created_at else None,
     }
+
+
+@router.post("/change-password", summary="Change own password")
+async def change_password(
+    input_data: ChangePasswordInput,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    if not pwd_context.verify(input_data.current_password, current_user.password_hash):
+        raise HTTPException(status_code=400, detail="Current password is incorrect.")
+    if len(input_data.new_password) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters.")
+    if input_data.current_password == input_data.new_password:
+        raise HTTPException(status_code=400, detail="New password must be different from current password.")
+
+    new_hash = pwd_context.hash(input_data.new_password)
+    await db.execute(
+        update(User)
+        .where(User.user_id == current_user.user_id)
+        .values(password_hash=new_hash)
+    )
+    await db.commit()
+    return {"message": "Password changed successfully."}
 
 
 @router.post("/refresh", summary="Refresh access token")

@@ -8,8 +8,6 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import Alert from '@mui/material/Alert';
-import Chip from '@mui/material/Chip';
 import LinearProgress from '@mui/material/LinearProgress';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -18,16 +16,18 @@ import IconButton from '@mui/material/IconButton';
 import DeleteOutlined from '@ant-design/icons/DeleteOutlined';
 import FileAddOutlined from '@ant-design/icons/FileAddOutlined';
 import UploadOutlined from '@ant-design/icons/UploadOutlined';
+import SaveOutlined from '@ant-design/icons/SaveOutlined';
 
 import MainCard from 'components/MainCard';
 import client from 'api/client';
+import { useSnackbar } from 'contexts/SnackbarContext';
 
 export default function NewRequest() {
   const navigate = useNavigate();
+  const snackbar = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const [formData, setFormData] = useState({
     academic_year: '2025/2026',
@@ -55,8 +55,6 @@ export default function NewRequest() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-    setSuccess(false);
 
     try {
       const res = await client.post('/requests/', {
@@ -77,14 +75,29 @@ export default function NewRequest() {
         setUploading(false);
       }
 
-      setSuccess(true);
+      snackbar('Request submitted successfully', { severity: 'success', title: res.data.status === 'ineligible' ? 'Flagged' : 'Sent' });
       setTimeout(() => {
         navigate('/student/my-requests');
       }, 2000);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to submit request');
+      snackbar(err.response?.data?.detail || 'Failed to submit request', { severity: 'error' });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSaveDraft = async () => {
+    setSaving(true);
+    try {
+      await client.post('/requests/draft', {
+        ...formData,
+        semester: Number(formData.semester)
+      });
+      snackbar('Draft saved', { severity: 'success' });
+    } catch (err) {
+      snackbar(err.response?.data?.detail || 'Failed to save draft', { severity: 'error' });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -104,8 +117,6 @@ export default function NewRequest() {
           <MainCard title="Request Details">
             <form onSubmit={handleSubmit}>
               <Stack spacing={3}>
-                {error && <Alert severity="error">{error}</Alert>}
-                {success && <Alert severity="success">Request submitted successfully! Redirecting...</Alert>}
                 {uploading && <LinearProgress />}
 
                 <Grid container spacing={2}>
@@ -212,6 +223,14 @@ export default function NewRequest() {
                 <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ mt: 2 }}>
                   <Button variant="outlined" color="secondary" onClick={() => navigate('/student/dashboard')}>
                     Cancel
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    disabled={saving}
+                    startIcon={<SaveOutlined />}
+                    onClick={handleSaveDraft}
+                  >
+                    {saving ? 'Saving...' : 'Save Draft'}
                   </Button>
                   <Button
                     type="submit"

@@ -17,7 +17,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
-import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid2';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
@@ -25,6 +24,7 @@ import IconButton from '@mui/material/IconButton';
 
 import MainCard from 'components/MainCard';
 import client from 'api/client';
+import { useSnackbar } from 'contexts/SnackbarContext';
 
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import CheckCircleOutlined from '@ant-design/icons/CheckCircleOutlined';
@@ -80,8 +80,8 @@ export default function StaffApprovals() {
   const [decisionType, setDecisionType] = useState(null);
   const [comments, setComments] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState(null);
 
+  const snackbar = useSnackbar();
   const userRole = (localStorage.getItem('userRole') || '').toLowerCase();
 
   const fetchPending = () => {
@@ -106,14 +106,12 @@ export default function StaffApprovals() {
   const handleOpenDecision = (type) => {
     setDecisionType(type);
     setComments('');
-    setSubmitError(null);
     setDecisionOpen(true);
   };
 
   const handleSubmitDecision = async () => {
     if (!selected) return;
     setSubmitting(true);
-    setSubmitError(null);
     try {
       await client.post(`/approvals/${selected.request_id}/decide`, {
         decision: decisionType,
@@ -122,9 +120,10 @@ export default function StaffApprovals() {
       setDecisionOpen(false);
       setDetailOpen(false);
       setSelected(null);
+      snackbar(`Request ${decisionType} successfully`, { severity: 'success' });
       fetchPending();
     } catch (err) {
-      setSubmitError(err.response?.data?.detail || 'Failed to submit decision');
+      snackbar(err.response?.data?.detail || 'Failed to submit decision', { severity: 'error' });
     } finally {
       setSubmitting(false);
     }
@@ -404,7 +403,6 @@ export default function StaffApprovals() {
         </DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2}>
-            {submitError && <Alert severity="error">{submitError}</Alert>}
             <Typography variant="body2" color="text.secondary">
               {decisionType === 'approved' && 'This will advance the request to the next approval stage.'}
               {decisionType === 'rejected' && 'This will mark the request as rejected. The student will be notified.'}
