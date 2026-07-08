@@ -106,12 +106,18 @@ The Backend relies on several external packages (like FastAPI and SQLAlchemy). W
    py -3 -m pip install -r requirements.txt
    ```
 
-3. Install the required packages (make sure the virtual environment is activated):
+3. Install the required packages (make sure the virtual environment is activated and you are in the backend directory):
 
    **For Linux/Mac & Windows 11:**
    ```bash
    pip install -r requirements.txt
    ```
+
+   **Windows note:** If you see `Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'`, first run:
+   ```cmd
+   cd %USERPROFILE%\Desktop\smart-post\backend
+   ```
+   then activate `venv` again and retry `pip install -r requirements.txt`.
 
 ### Step 3.5: Build the Database Tables
 Right now, the database is empty. We need to tell our system to create all the tables (Users, Students, Requests, etc.).
@@ -188,6 +194,17 @@ You can click any box, click the **"Try it out"** button, fill in the required f
   py -3 -m pip install -r requirements.txt
   py -3 -m pip install apscheduler
   ```
+
+**Error: "Failed building wheel for pydantic-core" during install due to Rust toolchain issues**
+- **Cause:** Some packages like `pydantic-core` require the Rust toolchain to build wheels if a prebuilt wheel is unavailable.
+- **Fix:** Install the Visual Studio Build Tools and Rust toolchain:
+  1. Install Visual Studio Build Tools 2022 with the **"Desktop development with C++"** workload.
+  2. Install Rust using the official installer from https://rust-lang.org/tools/install.
+  3. Delete `venv`, recreate it, then run:
+     ```cmd
+     venv\Scripts\activate.bat
+     py -3 -m pip install -r requirements.txt
+     ```
 
 **Error: "'alembic' is not recognized as an internal or external command"**
 - **Cause:** Your `pip install -r requirements.txt` command failed in the previous step, so Alembic was never actually installed.

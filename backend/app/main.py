@@ -54,12 +54,8 @@ async def health():
 async def on_startup():
     print(f"*** {settings.app_name} API started [{settings.app_env}] ***")
     print(f"   Docs -> http://127.0.0.1:8000/api/docs")
-    from app.services.scheduler import start_scheduler
-    await start_scheduler()
 
 
 @app.on_event("shutdown")
 async def on_shutdown():
     print(f"*** {settings.app_name} API shutting down. ***")
-    from app.services.scheduler import scheduler
-    scheduler.shutdown(wait=False)
