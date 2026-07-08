@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from sqlalchemy import (
-    Boolean, DateTime, ForeignKey, SmallInteger,
+    Boolean, DateTime, Enum, ForeignKey, SmallInteger,
     String, Text, UniqueConstraint, func
 )
 from sqlalchemy.dialects.postgresql import UUID
@@ -28,17 +28,25 @@ class Request(Base):
     semester: Mapped[int] = mapped_column(SmallInteger, nullable=False)                 # 1 or 2
     reason: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[RequestStatus] = mapped_column(
-        String, nullable=False, default=RequestStatus.draft, index=True
+        Enum(RequestStatus, name="request_status", native_enum=True),
+        nullable=False,
+        default=RequestStatus.draft,
+        index=True,
     )
     scope: Mapped[PostponementScope] = mapped_column(
-        String, nullable=False, default=PostponementScope.full_semester
+        Enum(PostponementScope, name="postponement_scope", native_enum=True),
+        nullable=False,
+        default=PostponementScope.full_semester,
     )
 
     # ── Submission ───────────────────────────────────────────────
     submitted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, index=True)
 
     # ── Verification ─────────────────────────────────────────────
-    ineligibility_reason: Mapped[IneligibilityReason | None] = mapped_column(String, nullable=True)
+    ineligibility_reason: Mapped[IneligibilityReason | None] = mapped_column(
+        Enum(IneligibilityReason, name="ineligibility_reason", native_enum=True),
+        nullable=True,
+    )
     ineligibility_detail: Mapped[str | None] = mapped_column(Text, nullable=True)
     admin_override: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     admin_override_by: Mapped[uuid.UUID | None] = mapped_column(
