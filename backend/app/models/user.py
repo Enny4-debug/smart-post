@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import Boolean, DateTime, String, func, Text
+from sqlalchemy import Boolean, DateTime, Enum, String, func, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from app.database import Base
@@ -17,7 +17,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     password_hash: Mapped[str] = mapped_column(String, nullable=False)
     role: Mapped[UserRole] = mapped_column(
-        String, nullable=False, index=True
+        Enum(UserRole, name="user_role", native_enum=False, create_constraint=False), nullable=False, index=True
     )
     department: Mapped[str | None] = mapped_column(String(150), nullable=True)
     profile_picture: Mapped[str | None] = mapped_column(Text, nullable=True)

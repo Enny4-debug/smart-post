@@ -88,13 +88,27 @@ async def create_request(
         metadata_={
             "academic_year": request_in.academic_year,
             "semester": request_in.semester,
-            "scope": request_in.scope,
-            "verification_failed": failures[0] if failures else None,
+            "scope": request_in.scope.value if request_in.scope else None,
         },
     )
     db.add(audit)
 
-    if not failures:
+    if failures:
+        fail_audit = AuditLog(
+            user_id=user.user_id,
+            request_id=new_request.request_id,
+            action="verification_failed",
+            entity_type="request",
+            entity_id=str(new_request.request_id),
+            metadata_={
+                "reason": failures[0],
+                "detail": new_request.ineligibility_detail,
+                "academic_year": request_in.academic_year,
+                "semester": request_in.semester,
+            },
+        )
+        db.add(fail_audit)
+    else:
         from app.services.notification import notify_approvers_hod_academic
         await notify_approvers_hod_academic(db, new_request)
 
@@ -295,6 +309,19 @@ async def _run_verification(db: AsyncSession, student: Student, req: Request):
             if failures[0] == "fee_arrears"
             else "Maximum cumulative postponement years reached."
         )
+
+        fail_audit = AuditLog(
+            user_id=student.user_id,
+            request_id=req.request_id,
+            action="verification_failed",
+            entity_type="request",
+            entity_id=str(req.request_id),
+            metadata_={
+                "reason": failures[0],
+                "detail": req.ineligibility_detail,
+            },
+        )
+        db.add(fail_audit)
     else:
         req.status = RequestStatus.pending_hod
         req.submitted_at = datetime.now(timezone.utc)

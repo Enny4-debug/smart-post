@@ -360,7 +360,7 @@ export default function StaffApprovals() {
                               size="small"
                               color="primary"
                               component="a"
-                              href={`http://localhost:8000/api/v1/documents/download/${ef.evidence_id}`}
+                              href={`http://localhost:8001/api/v1/documents/download/${ef.evidence_id}`}
                               target="_blank"
                               title="Download"
                             >

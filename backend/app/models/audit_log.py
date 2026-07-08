@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import DateTime, ForeignKey, String, Text, func
-from sqlalchemy.dialects.postgresql import JSONB, INET, UUID
+from sqlalchemy import DateTime, Enum, ForeignKey, String, Text, func
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from app.models.enums import AuditAction
@@ -20,7 +20,7 @@ class AuditLog(Base):
     request_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("requests.request_id"), nullable=True, index=True
     )
-    action: Mapped[AuditAction] = mapped_column(String, nullable=False, index=True)
+    action: Mapped[AuditAction] = mapped_column(Enum(AuditAction, name="audit_action", native_enum=False, create_constraint=False), nullable=False, index=True)
     entity_type: Mapped[str | None] = mapped_column(String(50), nullable=True)  # 'request' | 'user' | 'file' ...
     entity_id: Mapped[str | None] = mapped_column(Text, nullable=True)           # the PK of the affected entity
     metadata_: Mapped[dict | None] = mapped_column(

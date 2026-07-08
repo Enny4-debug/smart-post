@@ -28,13 +28,13 @@ class Request(Base):
     semester: Mapped[int] = mapped_column(SmallInteger, nullable=False)                 # 1 or 2
     reason: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[RequestStatus] = mapped_column(
-        Enum(RequestStatus, name="request_status", native_enum=True),
+        Enum(RequestStatus, name="request_status", native_enum=False, create_constraint=False),
         nullable=False,
         default=RequestStatus.draft,
         index=True,
     )
     scope: Mapped[PostponementScope] = mapped_column(
-        Enum(PostponementScope, name="postponement_scope", native_enum=True),
+        Enum(PostponementScope, name="postponement_scope", native_enum=False, create_constraint=False),
         nullable=False,
         default=PostponementScope.full_semester,
     )
@@ -44,7 +44,7 @@ class Request(Base):
 
     # ── Verification ─────────────────────────────────────────────
     ineligibility_reason: Mapped[IneligibilityReason | None] = mapped_column(
-        Enum(IneligibilityReason, name="ineligibility_reason", native_enum=True),
+        Enum(IneligibilityReason, name="ineligibility_reason", native_enum=False, create_constraint=False),
         nullable=True,
     )
     ineligibility_detail: Mapped[str | None] = mapped_column(Text, nullable=True)

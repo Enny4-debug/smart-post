@@ -296,7 +296,7 @@ export default function RequestDetail() {
                             <IconButton
                               size="small"
                               component="a"
-                              href={`http://localhost:8000/api/v1/documents/download/${ef.evidence_id}`}
+                              href={`http://localhost:8001/api/v1/documents/download/${ef.evidence_id}`}
                               target="_blank"
                             >
                               <DownloadOutlined />
@@ -370,14 +370,14 @@ export default function RequestDetail() {
             previewFile.file_type?.startsWith('image/') ? (
               <Box
                 component="img"
-                src={`http://localhost:8000/api/v1/documents/download/${previewFile.evidence_id}`}
+                src={`http://localhost:8001/api/v1/documents/download/${previewFile.evidence_id}`}
                 alt={previewFile.original_name}
                 sx={{ maxWidth: '100%', maxHeight: '70vh' }}
               />
             ) : previewFile.file_type === 'application/pdf' ? (
               <Box
                 component="iframe"
-                src={`http://localhost:8000/api/v1/documents/download/${previewFile.evidence_id}`}
+                src={`http://localhost:8001/api/v1/documents/download/${previewFile.evidence_id}`}
                 title={previewFile.original_name}
                 sx={{ width: '100%', height: '70vh', border: 'none' }}
               />
@@ -385,7 +385,7 @@ export default function RequestDetail() {
               <Typography color="text.secondary">
                 Preview not available.{' '}
                 <a
-                  href={`http://localhost:8000/api/v1/documents/download/${previewFile.evidence_id}`}
+                  href={`http://localhost:8001/api/v1/documents/download/${previewFile.evidence_id}`}
                   target="_blank"
                   rel="noreferrer"
                 >

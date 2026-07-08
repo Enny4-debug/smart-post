@@ -66,13 +66,18 @@ export default function NewRequest() {
 
       if (selectedFiles.length > 0) {
         setUploading(true);
-        const uploadPromises = selectedFiles.map((file) => {
-          const fd = new FormData();
-          fd.append('file', file);
-          return client.post(`/documents/${requestId}/upload`, fd);
-        });
-        await Promise.all(uploadPromises);
-        setUploading(false);
+        try {
+          const uploadPromises = selectedFiles.map((file) => {
+            const fd = new FormData();
+            fd.append('file', file);
+            return client.post(`/documents/${requestId}/upload`, fd);
+          });
+          await Promise.all(uploadPromises);
+        } catch (uploadErr) {
+          snackbar('Failed to upload one or more files', { severity: 'error' });
+        } finally {
+          setUploading(false);
+        }
       }
 
       snackbar('Request submitted successfully', { severity: 'success', title: res.data.status === 'ineligible' ? 'Flagged' : 'Sent' });

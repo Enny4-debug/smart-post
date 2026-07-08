@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text, func
+from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, String, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
@@ -25,8 +25,8 @@ class Approval(Base):
         nullable=False,
         index=True,
     )
-    approver_role: Mapped[UserRole] = mapped_column(String, nullable=False)  # snapshot at decision time
-    decision: Mapped[DecisionType] = mapped_column(String, nullable=False)
+    approver_role: Mapped[UserRole] = mapped_column(Enum(UserRole, name="user_role", native_enum=False, create_constraint=False), nullable=False)  # snapshot at decision time
+    decision: Mapped[DecisionType] = mapped_column(Enum(DecisionType, name="decision_type", native_enum=False, create_constraint=False), nullable=False)
     comments: Mapped[str | None] = mapped_column(Text, nullable=True)
     decided_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()

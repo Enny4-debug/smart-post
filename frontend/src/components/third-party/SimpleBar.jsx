@@ -50,7 +50,9 @@ export default function SimpleBarScroll({ children, sx, ...other }) {
     <>
       <RootStyle>
         <SimpleBarStyle clickOnTrack={false} sx={sx} data-simplebar-direction="ltr" {...other}>
-          {children}
+          <Box>
+            {children}
+          </Box>
         </SimpleBarStyle>
       </RootStyle>
       <MobileView>

@@ -45,6 +45,11 @@ const ACTION_COLORS = {
   escalation_triggered: 'warning'
 };
 
+const FAILURE_REASONS = {
+  fee_arrears: 'Outstanding fee balance exceeds threshold',
+  max_postponements_reached: 'Maximum cumulative postponement years reached'
+};
+
 function formatDateTime(iso) {
   if (!iso) return '\u2014';
   return new Date(iso).toLocaleString('en-GB', {
@@ -155,6 +160,20 @@ export default function AdminAuditLog() {
                           color={e.metadata.decision === 'approved' ? 'success' : e.metadata.decision === 'rejected' ? 'error' : 'warning'}
                           size="small"
                         />
+                      )}
+                      {e.action === 'verification_failed' && e.metadata?.reason && (
+                        <Stack spacing={0.5}>
+                          <Chip
+                            label={FAILURE_REASONS[e.metadata.reason] || e.metadata.reason.replace(/_/g, ' ')}
+                            color="error"
+                            size="small"
+                          />
+                          {e.metadata.detail && (
+                            <Typography variant="caption" color="error">
+                              {e.metadata.detail}
+                            </Typography>
+                          )}
+                        </Stack>
                       )}
                     </TableCell>
                   </TableRow>

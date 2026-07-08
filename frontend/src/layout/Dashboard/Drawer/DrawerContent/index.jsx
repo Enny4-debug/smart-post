@@ -14,7 +14,7 @@ export default function DrawerContent() {
     <>
       <SimpleBar sx={{ '& .simplebar-content': { display: 'flex', flexDirection: 'column' } }}>
         <Navigation />
-        {drawerOpen}
+        {/* drawerOpen is a boolean (state); don't render it as a child */}
       </SimpleBar>
     </>
   );

@@ -36,6 +36,8 @@ class IneligibilityReason(str, enum.Enum):
     not_registered = "not_registered"
     data_mismatch = "data_mismatch"
     outstanding_fees = "outstanding_fees"
+    fee_arrears = "fee_arrears"
+    max_postponements_reached = "max_postponements_reached"
     limit_exceeded = "limit_exceeded"
 
 
