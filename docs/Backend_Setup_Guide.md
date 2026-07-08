@@ -99,6 +99,13 @@ The Backend relies on several external packages (like FastAPI and SQLAlchemy). W
    venv\Scripts\Activate.ps1
    ```
 
+   **Important Windows note:** If `python` or `pip` is not recognized, run the commands with the Python launcher:
+   ```cmd
+   py -3 -m venv venv
+   venv\Scripts\activate.bat
+   py -3 -m pip install -r requirements.txt
+   ```
+
 3. Install the required packages (make sure the virtual environment is activated):
 
    **For Linux/Mac & Windows 11:**
@@ -173,6 +180,15 @@ You can click any box, click the **"Try it out"** button, fill in the required f
 - **Cause:** You are likely using a brand new Python version (like 3.13) or a 32-bit version of Python where pre-compiled packages aren't available yet.
 - **Fix:** Uninstall your current Python and install **Python 3.12 (64-bit)** from python.org. After installing, delete your `venv` folder and start again from Step 3.4.
 
+**Error: `pip install` cannot find packages or `apscheduler` import fails on Windows**
+- **Cause:** The Windows virtual environment is not activated, or `pip` is running outside the intended Python environment.
+- **Fix:** Activate the `venv` folder and install using the Python launcher:
+  ```cmd
+  venv\Scripts\activate.bat
+  py -3 -m pip install -r requirements.txt
+  py -3 -m pip install apscheduler
+  ```
+
 **Error: "'alembic' is not recognized as an internal or external command"**
-- **Cause:** Your `pip install -r requirements.txt` command failed in the previous step, so Alembic was never actually installed. 
+- **Cause:** Your `pip install -r requirements.txt` command failed in the previous step, so Alembic was never actually installed.
 - **Fix:** Fix the `pip install` errors first (see the wheel building error above). Once the installation succeeds, the `alembic` command will work.
